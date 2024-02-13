@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="{% static 'myfirst.css' %}">
+    </head>
+
+<body>
+
+    {% include "mymenu.html" with me="TOBIAS" sponsor="W3SCHOOLS" %}
+
+    {% for member in mymembers %}
+        {{ member.firstname }}
+    {% endfor %}
+
+    {% for x in fruits %}
+    <h1
+        {% if forloop.first %}
+            style='background-color:lightblue;'
+        {% endif %}
+        >
+        {{ x }}
+    </h1>
+    {% empty %}
+    <li>
+        No members
+    </li>
+    {% endfor %}
+
+    <p>In views.py you can see what the fruits variable looks like.</p>
+
+    {% if greeting == 1 %}
+    <h1>Hello</h1>
+    {% elif greeting == 2 %}
+    <h1>Welcome</h1>
+    {% else %}
+    <h1>Goodbye</h1>
+    {% endif %}
+
+    {% include 'footer.html' %} 
+
+</body>
+
+</html>
