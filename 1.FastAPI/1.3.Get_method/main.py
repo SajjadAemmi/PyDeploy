@@ -2,7 +2,6 @@ from typing import Union
 from fastapi import FastAPI, HTTPException, status
 from fastapi.responses import StreamingResponse
 import uvicorn
-from PIL import Image
 import cv2
 import numpy as np
 import io
@@ -30,17 +29,8 @@ def read_item(item_id: int, q: Union[str, None] = None):
     return {"item_id": item_id, "q": q}
 
 
-@app.get("/image_pil/{red}/{green}/{blue}")
-def create_image_1(red: int, green: int, blue: int):
-    image = Image.new('RGB', (300, 200), (red, green, blue))
-    image_io = io.BytesIO()
-    image.save(image_io, format='PNG')
-    image_io.seek(0)
-    return StreamingResponse(image_io, media_type='image/png')
-
-
-@app.get("/image_cv2/{red}/{green}/{blue}")
-def create_image_2(red: int, green: int, blue: int):
+@app.get("/image/{red}/{green}/{blue}")
+def create_image(red: int, green: int, blue: int):
 
     if 0 <= red <= 255 and 0 <= green <= 255 and 0 <= blue <= 255:
         image = np.zeros((200, 300, 3), dtype=np.uint8)
