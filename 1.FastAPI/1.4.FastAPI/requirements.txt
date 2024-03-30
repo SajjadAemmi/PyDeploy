@@ -2,3 +2,4 @@ fastapi
 uvicorn[standard]
 opencv-python
 numpy
+sqlalchemy

@@ -1,50 +1,61 @@
 import io
-import os
-import shutil
-from typing import Optional
-import logging
-
 import cv2
-from fastapi import FastAPI, File, UploadFile, Form
-from starlette.responses import StreamingResponse
+import numpy as np
+from fastapi import FastAPI, File, UploadFile, Form, HTTPException
+from fastapi.responses import StreamingResponse
 
 
-logging.basicConfig(level=logging.DEBUG)
 app = FastAPI()
+friends = {}
 
 
 @app.get("/")
-def test_root():
+def read_root():
     return {"Hello": "World"}
 
 
-@app.post("/salam2")
-def test_2(name: str = Form(...)):
-    return "علیک سلام" + " " + name
+@app.get("/items")
+def get_items():
+    return friends
 
 
-@app.post("/gray")
-def rgb2gray(input_image_file: UploadFile = File(...)):
-    user_id = '1'
-    os.makedirs(f'io/{user_id}', exist_ok=True)
+@app.post("/items")
+def add_item(id: str = Form(), name: str = Form(), age: float = Form()):
+    friends[id] = {"name": name, "age": age}
+    return friends[id]
 
-    # save image file
-    extension = input_image_file.filename.split('.')[-1]
-    input_image_file.filename = f"input_image.{extension}"
-    input_image_file_path = f"io/{user_id}/{input_image_file.filename}"
-    with open(input_image_file_path, "wb") as buffer:
-        shutil.copyfileobj(input_image_file.file, buffer)
-    logging.debug(f"image saved for user id:{user_id}")
 
-    # Crop and align the images
-    logging.info(f"convert color image to gray for user id:{user_id}")
+@app.put("/items/{id}")
+def update_item(id: str, name: str = Form(None), age: float = Form(None)):
+    if id not in friends:
+        raise HTTPException(status_code=404, detail="Item not found")
+    if name is not None:
+        friends[id]["name"] = name
+    if age is not None:
+        friends[id]["age"] = age
+    return friends[id]
 
-    image_color = cv2.imread(input_image_file_path)
-    image_gray = cv2.cvtColor(image_color, cv2.COLOR_BGR2GRAY)
 
-    cv2.imwrite(input_image_file_path, image_gray)  # optional
-    logging.debug(f"image writed for user id:{user_id}")
+@app.delete("/items/{id}")
+def delete_item(id: str):
+    if id not in friends:
+        raise HTTPException(status_code=404, detail="Item not found")
+    del friends[id]
+    return {"message": "Item deleted"}
 
-    _, final_image = cv2.imencode(".jpg", image_gray)
-    shutil.rmtree(f'io/{user_id}')
-    return StreamingResponse(io.BytesIO(final_image.tobytes()), media_type="image/jpg")
+
+@app.post("/rgb2gray")
+async def rgb2gray(input_file: UploadFile = File(...)):
+    # Ensure that the uploaded file is an image
+    if not input_file.content_type.startswith("image/"):
+        raise HTTPException(status_code=415, detail="Unsupported file type")
+
+    contents = await input_file.read()
+    np_array = np.frombuffer(contents, np.uint8)
+    image_rgb = cv2.imdecode(np_array, cv2.IMREAD_UNCHANGED)
+
+    image_gray = cv2.cvtColor(image_rgb, cv2.COLOR_BGR2GRAY)
+
+    _, image_encoded = cv2.imencode(".jpg", image_gray)
+    image_bytes = image_encoded.tobytes()
+    return StreamingResponse(io.BytesIO(image_bytes), media_type="image/jpeg")
