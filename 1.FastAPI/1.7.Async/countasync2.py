@@ -2,17 +2,22 @@ import time
 import asyncio
 import random
 
+count = 0
 
 async def marriage(i):
+    global count
     r = random.randint(0, 10)
     await asyncio.sleep(r)
-    print(i)
+    print(f"{i} married after {r} years")
+    count += 1
 
 
 async def main():
     for child in ["mamad", "gholi", "goli", "alex"]:
         asyncio.create_task(marriage(child))
-    await asyncio.sleep(10)
+    
+    while count < 4:
+        await asyncio.sleep(1)
 
 if __name__ == "__main__":
     s = time.perf_counter()

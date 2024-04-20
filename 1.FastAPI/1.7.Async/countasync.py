@@ -6,7 +6,7 @@ import random
 async def marriage(i):
     r = random.randint(0, 10)
     await asyncio.sleep(r)
-    print(i)
+    print(f"{i} married after {r} years")
 
 
 async def main():

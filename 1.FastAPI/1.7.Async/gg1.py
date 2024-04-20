@@ -1,7 +1,7 @@
 import asyncio
- 
+
+
 async def fn():
-     
     print("one")
     await asyncio.sleep(1)
     await fn2()
@@ -9,10 +9,12 @@ async def fn():
     await asyncio.sleep(1)
     print('five')
     await asyncio.sleep(1)
- 
+
+
 async def fn2():
-    await asyncio.sleep(1)
     print("two")
     await asyncio.sleep(1)
     print("three")
+
+
 asyncio.run(fn())
