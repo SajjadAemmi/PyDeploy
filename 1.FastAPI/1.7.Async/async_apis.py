@@ -14,17 +14,17 @@ def get_states():
     return response.json()
 
 
-def get_citie(state_id):
+def get_cities(state_id):
     url = f"https://iran-locations-api.vercel.app/api/v1/fa/cities?state_id={state_id}"
     response = requests.request("GET", url)
     return response.json()
 
 
-def iran_locations():
+def get_coordinates():
     states = get_states()
     for state in states:
         if state["name"] == "خراسان رضوی":
-            response = get_citie(state["id"])
+            response = get_cities(state["id"])
             cities = response["cities"]
             for city in cities:
                 if city["name"] == "طرقبه":
@@ -46,7 +46,7 @@ def iran_locations():
 
 def main():
     rhymes = rhyme_finder("جان")
-    latitude, longitude = iran_locations()
+    latitude, longitude = get_coordinates()
     print(rhymes)
     print(latitude, longitude)
 
