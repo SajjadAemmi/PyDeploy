@@ -1,0 +1,4 @@
+sqlmodel
+streamlit
+streamlit-option-menu
+streamlit-cookie
