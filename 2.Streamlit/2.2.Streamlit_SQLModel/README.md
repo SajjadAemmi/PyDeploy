@@ -1,4 +1,4 @@
-# PhotographyAI
+# ChatBot
 
 ChatBot
 

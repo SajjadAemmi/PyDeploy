@@ -26,17 +26,16 @@ def ai(user_message_text):
     headers = {"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiYzgyZDI1ZmEtYWRiOC00ZTcwLWI4OGEtYjUyZDI2NTEyOTY4IiwidHlwZSI6ImFwaV90b2tlbiJ9.OIwcKNh9tV6GVvNOWP7l_BFVnao8_KVPo7kTQdwY8sc"}
     url = "https://api.edenai.run/v2/text/chat"
     payload = {
-        "providers": { "openai": "gpt-3.5-turbo" },
-        "text": user_message_text,
+        "providers": "openai",
+        "text": "Hello i need your help ! ",
         "chatbot_global_action": "Act as an assistant",
         "previous_history": [],
         "temperature": 0.0,
         "max_tokens": 150,
-        "fallback_providers": ""
+        "fallback_providers": "openai"
     }
     response = requests.post(url, json=payload, headers=headers)
     result = json.loads(response.text)
-    print(result)
     ai_message_text = result['openai']['generated_text']
     return ai_message_text
 
