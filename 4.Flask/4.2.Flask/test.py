@@ -1,29 +1,17 @@
-# from deepface import DeepFace
+import bcrypt
 
-# result = DeepFace.verify(
-#   img1_path = "uploads/photo_1403-03-12 18.52.42.jpeg",
-#   img2_path = "uploads/photo_1403-03-12 18.52.42.jpeg",
-# )
+password = "in_password_ro_be_kasi_nadi"
+password_byte = password.encode("utf-8")
+hashed_password = bcrypt.hashpw(password_byte, bcrypt.gensalt())
+print(hashed_password)
 
-# face_objs = DeepFace.extract_faces(
-#   img_path = "uploads/photo_1403-03-12 18.52.42.jpeg",
-# )
-# print(face_objs)
+new_password = "in_password_ro_be_kasi_nadi"
+new_password_byte = new_password.encode("utf-8")
+hashed_new_password = bcrypt.hashpw(new_password_byte, bcrypt.gensalt())
+print(hashed_new_password)
+if bcrypt.checkpw(new_password_byte, hashed_password):
+    print("yes")
+else:
+    print("no")
+  
 
-# objs = DeepFace.analyze(
-#   img_path = "uploads/photo_1403-03-12 18.52.42.jpeg",
-#   actions = ['age' 
-#             #  'gender', 'race', 'emotion'
-#             ]
-# )
-
-# print(objs[0]['age'])
-
-from ultralytics import YOLO
-
-# Load a model
-model = YOLO("yolov8n-cls.pt")  # load a pretrained model (recommended for training)
-
-results = model("uploads/Firefly - The magical lion.jpg")  # predict on an image
-for result in results:
-  print(result.names[result.probs.top1])
