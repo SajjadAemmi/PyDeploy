@@ -1,23 +1,16 @@
 import os
 import bcrypt
-from flask import Flask, flash, render_template, request, redirect, url_for, session as flask_session
-from sqlmodel import Field, SQLModel, create_engine, Session, select
+from flask import Flask, jsonify, flash, render_template, request, redirect, url_for, session as flask_session
+from sqlmodel import Session, select
 from pydantic import BaseModel
+from database import get_user_by_username, create_user, engine, User
 
 
 app = Flask("Analyze Face")
-app.secret_key = "secret key man"
+app.secret_key = "my_secret_key"
 app.config["UPLOAD_FOLDER"] = './uploads'
 app.config["ALLOWED_EXTENSIONS"] = {'png', 'jpg', 'jpeg'}
 
-class User(SQLModel, table=True):
-    id: int = Field(default=None, primary_key=True)
-    city: str = Field()
-    username: str = Field()
-    password: str = Field()
-
-engine = create_engine('sqlite:///./database.db', echo=True)
-SQLModel.metadata.create_all(engine)
 
 # PyDantic models for request validation
 class RegisterModel(BaseModel):
@@ -37,18 +30,13 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/test")
-def test():
-    return render_template("test.html", a=2, b=3)
-
-
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if request.method == "GET":
         return render_template("login.html")
     elif request.method == "POST":
         try:
-            login_model = LoginModel(
+            login_data = LoginModel(
                 username=request.form["username"],
                 password=request.form["password"]
             )
@@ -56,21 +44,18 @@ def login():
             flash("Type error", "warning")
             return redirect(url_for("login"))
         
-        with Session(engine) as db_session:
-            statement = select(User).where(User.username == login_model.username)
-            user = db_session.exec(statement).first()
-
+        user = get_user_by_username(login_data.username)
         if user:
-            password_byte = login_model.password.encode("utf-8")
+            password_byte = login_data.password.encode("utf-8")
             if bcrypt.checkpw(password_byte, user.password):
-                flash("Welcome, you are logged in", "success")
+                flash("خوش اومدی", "success")
                 flask_session["user_id"] = user.id
-                return redirect(url_for('upload'))
+                return redirect(url_for('profile'))
             else:
-                flash("Password is incorrect", "danger")
+                flash("در وارد کردن گذرواژه بیشتر دقت کن", "danger")
                 return redirect(url_for("login"))
         else:
-            flash("Username is incorrect", "danger")
+            flash("در وارد کردن نام کاربری بیشتر دقت کن", "danger")
             return redirect(url_for("login"))
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -93,20 +78,12 @@ def register():
         
         if not result:
             password_byte = register_data.password.encode("utf-8")
-            hashed_password = bcrypt.hashpw(password_byte, bcrypt.gensalt())
-
-            with Session(engine) as db_session:
-                user = User(
-                    city=register_data.city,
-                    username=register_data.username,
-                    password=hashed_password
-                )
-                db_session.add(user)
-                db_session.commit()
-            flash("Your register done successfully")
+            password_hash = bcrypt.hashpw(password_byte, bcrypt.gensalt())
+            create_user(register_data.username, password_hash)
+            flash("از اینکه در وب‌اپ هوش مصنوعی ثبت نام کردی ازت ممنونم", "success")
             return redirect(url_for("login"))
         else:
-            flash("Username already exist, Try another username")
+            flash("این نام کاربری قبلا استفاده شده دوست من، یک نام کاربری دیگه انتخاب کن", "danger")
             return redirect(url_for("register"))
 
 
@@ -115,6 +92,19 @@ def logout():
     flask_session.pop("user_id")
     return redirect(url_for("index"))
 
+
+@app.route("/profile", methods=["GET", "POST"])
+def profile():
+    user_id = flask_session.get('user_id')
+    if not user_id:
+        return redirect(url_for('login'))
+
+    with Session(engine) as db_session:
+        user = db_session.get(User, user_id)
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+        
+        return render_template("profile.html", username=user.username)
 
 @app.route("/upload", methods=["GET", "POST"])
 def upload():

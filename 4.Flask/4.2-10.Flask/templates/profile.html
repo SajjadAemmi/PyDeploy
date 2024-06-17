@@ -1,0 +1,75 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+سرویس هوش مصنوعی
+{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-3">
+        <div class="card text-bg-primary mb-3">
+            <div class="card-header">
+                <h1>
+                    <i class="fa-duotone fa-face-viewfinder"></i>
+                </h1>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Primary card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                    card's content.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-3">
+        <div class="card text-bg-success mb-3">
+            <div class="card-header">
+                <h1>
+                    <i class="fa-duotone fa-object-group"></i>
+                </h1>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Success card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                    card's content.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-3">
+        <div class="card text-bg-danger mb-3">
+            <div class="card-header">
+                <h1>
+                    <i class="fa-duotone fa-child-reaching"></i>
+                </h1>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Danger card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                    card's content.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-3">
+        <div class="card text-bg-warning mb-3">
+            <div class="card-header">
+                <h1>
+                    <i class="fa-duotone fa-chart-mixed-up-circle-dollar"></i>
+                </h1>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Warning card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                    card's content.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h1>Upload your face image</h1>
+<form method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label for="formFile" class="form-label">Default file input example</label>
+        <input name="image" class="form-control" type="file" id="formFile">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}

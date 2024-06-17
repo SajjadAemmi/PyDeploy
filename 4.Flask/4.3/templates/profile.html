@@ -1,9 +1,0 @@
-{% extends 'layout.html' %}
-{% block title %}Profile{% endblock %}
-{% block content %}
-<h1>Profile</h1>
-<p>Welcome, {{ username }}!</p>
-<form action="{{ url_for('logout') }}" method="post">
-    <button type="submit">Logout</button>
-</form>
-{% endblock %}
