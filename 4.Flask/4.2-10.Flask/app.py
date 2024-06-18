@@ -128,3 +128,11 @@ def ai_face_analysis():
                 return render_template("result.html", age=age)
     else:
         return redirect(url_for("index"))
+
+
+@app.route("/ai-pose-detection", methods=["GET"])
+def ai_pose_detection():
+    if flask_session.get('user_id'):
+        return render_template("ai_pose_detection.html")
+    else:
+        return redirect(url_for("index"))
