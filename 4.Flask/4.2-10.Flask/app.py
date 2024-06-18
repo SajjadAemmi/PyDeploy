@@ -106,11 +106,11 @@ def profile():
         
         return render_template("profile.html", username=user.username)
 
-@app.route("/upload", methods=["GET", "POST"])
-def upload():
+@app.route("/ai-face-analysis", methods=["GET", "POST"])
+def ai_face_analysis():
     if flask_session.get('user_id'):
         if request.method == "GET":
-            return render_template("upload.html")
+            return render_template("ai_face_analysis.html")
         elif request.method == "POST":
             my_image = request.files['image']
             if my_image.filename == "":
