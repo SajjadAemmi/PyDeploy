@@ -7,78 +7,67 @@
 {% block content %}
 <div class="row mt-4">
     <div class="col-3">
-        <a href="/ai-face-analysis">
-            <div class="card text-bg-primary mb-3">
-                <div class="card-header">
-                    <h1>
-                        <i class="fa-duotone fa-face-viewfinder"></i>
-                    </h1>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Primary card title</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                        card's content.</p>
-                </div>
+        <div class="card text-bg-primary mb-3">
+            <div class="card-header">
+                <h1>
+                    <i class="fa-duotone fa-face-viewfinder"></i>
+                </h1>
             </div>
-        </a>
+            <div class="card-body">
+                <h5 class="card-title">آنالیز چهره</h5>
+                <p class="card-text">
+                    یک عکس از صورت خوشگلت بده، تا بهت بگم چند سالته، پسری یا دختری و ...
+                </p>
+                <a href="/ai-face-analysis" class="stretched-link"></a>
+            </div>
+        </div>
     </div>
     <div class="col-3">
-        <a href="#">
-            <div class="card text-bg-success mb-3">
-                <div class="card-header">
-                    <h1>
-                        <i class="fa-duotone fa-object-group"></i>
-                    </h1>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Success card title</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                        card's content.</p>
-                </div>
+        <div class="card text-bg-success mb-3">
+            <div class="card-header">
+                <h1>
+                    <i class="fa-duotone fa-object-group"></i>
+                </h1>
             </div>
-        </a>
+            <div class="card-body">
+                <h5 class="card-title">تشخیص اشیا</h5>
+                <p class="card-text">
+                    یک عکس از اتاقت بده، تا بهت بگم چه وسیله‌هایی توی اتاقت داری 
+                </p>
+                <a href="/ai-object-detection" class="stretched-link"></a>
+            </div>
+        </div>
     </div>
     <div class="col-3">
-        <a href="/ai-pose-detection">
-            <div class="card text-bg-danger mb-3">
-                <div class="card-header">
-                    <h1>
-                        <i class="fa-duotone fa-child-reaching"></i>
-                    </h1>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Pose Detection</h5>
-                    <p class="card-text">
-                        Pose detection using the MediaPipe PoseLandmarker task
-                    </p>
-                </div>
+        <div class="card text-bg-danger mb-3">
+            <div class="card-header">
+                <h1>
+                    <i class="fa-duotone fa-child-reaching"></i>
+                </h1>
             </div>
-        </a>
+            <div class="card-body">
+                <h5 class="card-title">Pose Detection</h5>
+                <p class="card-text">
+                    Pose detection using the MediaPipe PoseLandmarker task
+                </p>
+                <a href="/ai-pose-detection" class="stretched-link"></a>
+            </div>
+        </div>
     </div>
     <div class="col-3">
-        <a href="#">
-            <div class="card text-bg-warning mb-3">
-                <div class="card-header">
-                    <h1>
-                        <i class="fa-duotone fa-chart-mixed-up-circle-dollar"></i>
-                    </h1>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Warning card title</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                        card's content.</p>
-                </div>
+        <div class="card text-bg-warning mb-3">
+            <div class="card-header">
+                <h1>
+                    <i class="fa-duotone fa-chart-mixed-up-circle-dollar"></i>
+                </h1>
             </div>
-        </a>
+            <div class="card-body">
+                <h5 class="card-title">Warning card title</h5>
+                <p class="card-text">Some quick example text to build on the card title</p>
+                <a href="#" class="stretched-link"></a>
+            </div>
+        </div>
     </div>
 </div>
 
-<h1>Upload your face image</h1>
-<form method="post" enctype="multipart/form-data">
-    <div class="mb-3">
-        <label for="formFile" class="form-label">Default file input example</label>
-        <input name="image" class="form-control" type="file" id="formFile">
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
 {% endblock %}

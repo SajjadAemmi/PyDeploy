@@ -25,6 +25,7 @@ class LoginModel(BaseModel):
 def allowed_file(filename):
     return True
 
+
 @app.route("/")
 def index():
     return render_template("index.html")
