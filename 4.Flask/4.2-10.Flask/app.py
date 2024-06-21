@@ -1,8 +1,9 @@
 import os
 import bcrypt
-from flask import Flask, jsonify, flash, render_template, request, redirect, url_for, session as flask_session
+from flask import Flask, jsonify, send_file, flash, render_template, request, redirect, url_for, session as flask_session
 from sqlmodel import Session, select
 from pydantic import BaseModel
+from ultralytics import YOLO
 from database import get_user_by_username, create_user, engine, User
 
 
@@ -10,6 +11,9 @@ app = Flask("Analyze Face")
 app.secret_key = "my_secret_key"
 app.config["UPLOAD_FOLDER"] = './uploads'
 app.config["ALLOWED_EXTENSIONS"] = {'png', 'jpg', 'jpeg'}
+
+
+object_detection_model = YOLO("yolov8n.pt")
 
 
 # PyDantic models for request validation
@@ -127,6 +131,27 @@ def ai_face_analysis():
                     age = result[0]['age']
 
                 return render_template("result.html", age=age)
+    else:
+        return redirect(url_for("index"))
+
+
+@app.route("/ai-object-detection", methods=["GET", "POST"])
+def ai_object_detection():
+    if flask_session.get('user_id'):
+        if request.method == "GET":
+            return render_template("ai_object_detection.html")
+        elif request.method == "POST":
+            my_image = request.files['image']
+            if my_image.filename == "":
+                return redirect(url_for('upload'))
+            else:
+                if my_image and allowed_file(my_image.filename):
+                    save_path = os.path.join(app.config["UPLOAD_FOLDER"], my_image.filename)
+                    my_image.save(save_path)
+                    results = object_detection_model(save_path)
+                    annotated_img = results[0].plot()
+
+                return render_template("result.html", results=results)
     else:
         return redirect(url_for("index"))
 
