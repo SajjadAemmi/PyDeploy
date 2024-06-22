@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Number</title>
+</head>
+<body>
+    <h1>Enter a Number</h1>
+    <form action="{{ url_for('process') }}" method="POST">
+        <input type="number" name="number" required>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
