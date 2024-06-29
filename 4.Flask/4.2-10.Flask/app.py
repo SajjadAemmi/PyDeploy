@@ -3,7 +3,6 @@ import bcrypt
 from flask import Flask, jsonify, send_file, flash, render_template, request, redirect, url_for, session as flask_session
 from sqlmodel import Session, select
 from pydantic import BaseModel
-from ultralytics import YOLO
 from database import get_user_by_username, create_user, engine, User
 
 
@@ -13,18 +12,16 @@ app.config["UPLOAD_FOLDER"] = './uploads'
 app.config["ALLOWED_EXTENSIONS"] = {'png', 'jpg', 'jpeg'}
 
 
-object_detection_model = YOLO("yolov8n.pt")
-
-
-# PyDantic models for request validation
 class RegisterModel(BaseModel):
     city: str
     username: str
     password: str
 
+
 class LoginModel(BaseModel):
     username: str
     password: str
+
 
 def allowed_file(filename):
     return True
@@ -111,6 +108,7 @@ def profile():
         
         return render_template("profile.html", username=user.username)
 
+
 @app.route("/ai-face-analysis", methods=["GET", "POST"])
 def ai_face_analysis():
     if flask_session.get('user_id'):
@@ -121,16 +119,7 @@ def ai_face_analysis():
             if my_image.filename == "":
                 return redirect(url_for('upload'))
             else:
-                if my_image and allowed_file(my_image.filename):
-                    save_path = os.path.join(app.config["UPLOAD_FOLDER"], my_image.filename)
-                    my_image.save(save_path)
-                    result = DeepFace.analyze(
-                        img_path = save_path, 
-                        actions = ['age'],
-                    )
-                    age = result[0]['age']
-
-                return render_template("result.html", age=age)
+                return render_template("result.html")
     else:
         return redirect(url_for("index"))
 
@@ -145,13 +134,7 @@ def ai_object_detection():
             if my_image.filename == "":
                 return redirect(url_for('upload'))
             else:
-                if my_image and allowed_file(my_image.filename):
-                    save_path = os.path.join(app.config["UPLOAD_FOLDER"], my_image.filename)
-                    my_image.save(save_path)
-                    results = object_detection_model(save_path)
-                    annotated_img = results[0].plot()
-
-                return render_template("result.html", results=results)
+                return render_template("result.html")
     else:
         return redirect(url_for("index"))
 
