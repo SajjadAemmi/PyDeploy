@@ -144,3 +144,18 @@ def ai_pose_detection():
         return render_template("ai_pose_detection.html")
     else:
         return redirect(url_for("index"))
+
+
+@app.route('/mind-reader')
+def mind_reader():
+    return render_template('mind_reader.html')
+
+@app.route('/mind-reader-process', methods=['POST'])
+def mind_reader_process():
+    x = request.form['number']
+    return redirect(url_for('mind_reader_result', number=x))
+
+@app.route('/mind-reader-result')
+def mind_reader_result():
+    number = request.args.get('number')
+    return render_template('mind_reader_result.html', number=number)

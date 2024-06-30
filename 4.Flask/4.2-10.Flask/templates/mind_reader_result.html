@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+ذهن خوان
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-6">
+        <div class="card text-bg-light mb-3">
+            <div class="card-body">
+                <p>Click the button to start the progress bar.</p>
+                <button class="btn btn-primary" onclick="startProgress()">Start</button>
+                <div class="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 75%"></div>
+                </div>
+                <h1 id="result-number" style="display:none;">{{ number }}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function startProgress() {
+        var elem = document.getElementById("progress-bar");
+        var width = 0;
+        var id = setInterval(frame, 20);
+        function frame() {
+            if (width >= 100) {
+                clearInterval(id);
+                document.getElementById("result-number").style.display = "block";
+            } else {
+                width++;
+                elem.style.width = width + '%';
+            }
+        }
+    }
+</script>
+
+{% endblock %}
