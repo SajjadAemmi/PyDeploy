@@ -1,9 +1,13 @@
 import os
 import bcrypt
+from io import BytesIO
+import numpy as np
+from PIL import Image
 from flask import Flask, jsonify, send_file, flash, render_template, request, redirect, url_for, session as flask_session
 from sqlmodel import Session, select
-from pydantic import BaseModel
 from database import get_user_by_username, create_user, engine, User
+from models import LoginModel, RegisterModel
+from face_analysis import FaceAnalysis
 
 
 app = Flask("Analyze Face")
@@ -11,16 +15,7 @@ app.secret_key = "my_secret_key"
 app.config["UPLOAD_FOLDER"] = './uploads'
 app.config["ALLOWED_EXTENSIONS"] = {'png', 'jpg', 'jpeg'}
 
-
-class RegisterModel(BaseModel):
-    city: str
-    username: str
-    password: str
-
-
-class LoginModel(BaseModel):
-    username: str
-    password: str
+face_analysis = FaceAnalysis()
 
 
 def allowed_file(filename):
@@ -59,6 +54,7 @@ def login():
         else:
             flash("در وارد کردن نام کاربری بیشتر دقت کن", "danger")
             return redirect(url_for("login"))
+
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -115,11 +111,17 @@ def ai_face_analysis():
         if request.method == "GET":
             return render_template("ai_face_analysis.html")
         elif request.method == "POST":
-            my_image = request.files['image']
-            if my_image.filename == "":
+            input_image_file = request.files['image']
+            if input_image_file.filename == "":
                 return redirect(url_for('upload'))
             else:
-                return render_template("result.html")
+                if input_image_file and allowed_file(input_image_file.filename):
+                    input_image = Image.open(input_image_file.stream)
+                    input_image = np.array(input_image)
+                    output_image, genders, ages = face_analysis.detect_age_gender(input_image)
+                    print(genders, ages)
+
+                return render_template("ai_face_analysis_result.html", genders=genders, ages=ages)
     else:
         return redirect(url_for("index"))
 

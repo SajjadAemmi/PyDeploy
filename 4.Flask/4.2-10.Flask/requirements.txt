@@ -1,3 +1,6 @@
 flask
 bcrypt
 sqlmodel
+pillow
+insightface
+onnxruntime
