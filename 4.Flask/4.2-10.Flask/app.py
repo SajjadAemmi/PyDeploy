@@ -1,6 +1,5 @@
 import os
 import bcrypt
-from io import BytesIO
 import numpy as np
 from PIL import Image
 from flask import Flask, jsonify, send_file, flash, render_template, request, redirect, url_for, session as flask_session
@@ -119,9 +118,7 @@ def ai_face_analysis():
                     input_image = Image.open(input_image_file.stream)
                     input_image = np.array(input_image)
                     output_image, genders, ages = face_analysis.detect_age_gender(input_image)
-                    print(genders, ages)
-
-                return render_template("ai_face_analysis_result.html", genders=genders, ages=ages)
+                    return render_template("ai_face_analysis.html", genders=genders, ages=ages)
     else:
         return redirect(url_for("index"))
 
