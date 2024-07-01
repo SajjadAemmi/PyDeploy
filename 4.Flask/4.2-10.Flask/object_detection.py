@@ -1,69 +1,129 @@
-import onnxruntime as ort
+import argparse
+from operator import itemgetter
+import yaml
 import cv2
 import numpy as np
-
-# Load the ONNX model
-model_path = 'yolov8n.onnx'
-session = ort.InferenceSession(model_path)
-
-# Load the image
-image_path = 'uploads/Firefly - The magical lion.jpg'
-image = cv2.imread(image_path)
-image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-image_height, image_width = image.shape[:2]
-
-# Preprocess the image: resize, normalize and add batch dimension
-input_size = (640, 640)  # This size should match the model's expected input size
-input_image = cv2.resize(image, input_size)
-input_image = input_image / 255.0
-input_image = np.transpose(input_image, (2, 0, 1))  # Change data layout from HWC to CHW
-input_image = np.expand_dims(input_image, axis=0)  # Add batch dimension
-input_image = input_image.astype(np.float32)
-
-# Get input name for the ONNX model
-input_name = session.get_inputs()[0].name
-
-# Perform inference
-outputs = session.run(None, {input_name: input_image})
-
-outputs = np.transpose(np.squeeze(outputs[0]))
+import onnxruntime as ort
 
 
-# Post-processing
-# Assuming the model output is in the format [batch, num_boxes, box_params]
-# where box_params include [x_center, y_center, width, height, objectness, class_scores...]
+class YOLOv8:
+    def __init__(self, onnx_model_path, confidence_threshold=0.5, iou_threshold=0.5):
+        self.confidence_threshold = confidence_threshold
+        self.iou_threshold = iou_threshold
+        with open("coco8.yaml") as stream:
+            self.classes = yaml.safe_load(stream)["names"]
+        self.session = ort.InferenceSession(
+            onnx_model_path, providers=["CPUExecutionProvider"]
+        )
+        self.model_inputs = self.session.get_inputs()
+        self.input_width, self.input_height = self.model_inputs[0].shape[2:4]
 
-boxes = outputs[:, :4]
-scores = outputs[:, 4]
-class_scores = outputs[:, 5:]
+    def draw_detections(self, image, box, score, class_id):
+        x1, y1, w, h = box
+        color = (0, 255, 0)
+        cv2.rectangle(image, (int(x1), int(y1)), (int(x1 + w), int(y1 + h)), color, 2)
+        label = f"{self.classes[class_id]}: {score:.2f}"
+        (label_width, label_height), _ = cv2.getTextSize(
+            label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1
+        )
+        label_x = x1
+        label_y = y1 - 10 if y1 - 10 > label_height else y1 + 10
+        cv2.rectangle(
+            image,
+            (label_x, label_y - label_height),
+            (label_x + label_width, label_y + label_height),
+            color,
+            cv2.FILLED,
+        )
+        cv2.putText(
+            image,
+            label,
+            (label_x, label_y),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.5,
+            (0, 0, 0),
+            1,
+            cv2.LINE_AA,
+        )
 
-# Filter out boxes with low confidence
-confidence_threshold = 0.1
-boxes = boxes[scores > confidence_threshold]
-class_scores = class_scores[scores > confidence_threshold]
-scores = scores[scores > confidence_threshold]
+    def preprocess(self, image):
+        self.image_height, self.image_width = image.shape[:2]
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        image = cv2.resize(image, (self.input_width, self.input_height))
+        image_data = np.array(image, dtype=np.float32) / 255.0
+        image_data = np.transpose(image_data, (2, 0, 1))  # Channel first
+        image_data = np.expand_dims(image_data, axis=0)
+        return image_data
 
-# Convert boxes from [x_center, y_center, width, height] to [x1, y1, x2, y2]
-# boxes[:, 0] = boxes[:, 0] - (boxes[:, 2] / 2)
-# boxes[:, 1] = boxes[:, 1] - (boxes[:, 3] / 2)
-# boxes[:, 2] = boxes[:, 0] + boxes[:, 2]
-# boxes[:, 3] = boxes[:, 1] + boxes[:, 3]
+    def postprocess(self, input_image, output):
+        outputs = np.transpose(np.squeeze(output[0]))
+        rows = outputs.shape[0]
+        boxes = []
+        scores = []
+        class_ids = []
+        x_factor = self.image_width / self.input_width
+        y_factor = self.image_height / self.input_height
 
-print(boxes)
+        for i in range(rows):
+            classes_scores = outputs[i][4:]
+            max_score = np.amax(classes_scores)
+            if max_score >= self.confidence_threshold:
+                class_id = np.argmax(classes_scores)
+                x, y, w, h = outputs[i][0], outputs[i][1], outputs[i][2], outputs[i][3]
+                left = int((x - w / 2) * x_factor)
+                top = int((y - h / 2) * y_factor)
+                width = int(w * x_factor)
+                height = int(h * y_factor)
+                class_ids.append(class_id)
+                scores.append(max_score)
+                boxes.append([left, top, width, height])
 
-# Scale boxes back to original image size
-boxes[:, [0, 2]] *= image_width / input_size[0]
-boxes[:, [1, 3]] *= image_height / input_size[1]
+        indices = cv2.dnn.NMSBoxes(
+            boxes, scores, self.confidence_threshold, self.iou_threshold
+        )
 
-print(boxes)
+        output_boxes = np.array(boxes)[indices]
+        output_scores = np.array(scores)[indices]
+        output_class_ids = np.array(class_ids)[indices]
+        output_labels = itemgetter(*output_class_ids)(self.classes)
+
+        output_image = input_image.copy()
+        for i in indices:
+            box = boxes[i]
+            score = scores[i]
+            class_id = class_ids[i]
+            self.draw_detections(output_image, box, score, class_id)
+        return output_image, output_labels
+
+    def __call__(self, input_image):
+        image_data = self.preprocess(input_image)
+        outputs = self.session.run(None, {self.model_inputs[0].name: image_data})
+        output_image, output_labels = self.postprocess(input_image, outputs)
+        return output_image, output_labels
 
 
-# Draw the boxes on the image
-for box, score in zip(boxes, scores):
-    x1, y1, x2, y2 = box.astype(int)
-    cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
-    cv2.putText(image, f'{score:.2f}', (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--image", type=str, required=True ,help="Input image path",
+    )
+    parser.add_argument(
+        "--model", type=str, default="models/yolov8n.onnx", help="ONNX model path"
+    )
+    parser.add_argument(
+        "--conf-threshold", type=float, default=0.5, help="Confidence threshold"
+    )
+    parser.add_argument(
+        "--iou-threshold", type=float, default=0.5, help="NMS IoU threshold"
+    )
+    args = parser.parse_args()
 
-# Save the resulting image
-result_image_path = 'result.jpg'
-cv2.imwrite(result_image_path, image)
+    object_detector = YOLOv8(args.model, args.conf_threshold, args.iou_threshold)
+    input_image = cv2.imread(args.image)
+    output_image, output_labels = object_detector(input_image)
+
+    print(output_labels)
+
+    cv2.namedWindow("Output", cv2.WINDOW_NORMAL)
+    cv2.imshow("Output", output_image)
+    cv2.waitKey(0)

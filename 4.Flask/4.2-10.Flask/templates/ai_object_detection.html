@@ -40,6 +40,31 @@
             </div>
         </div>
     </div>
+    <div class="col-6">
+        <div class="card text-bg-light mb-3">
+            <div class="card-body">
+                <h1 class="card-title">
+                    <i class="fa-duotone fa-face-viewfinder"></i>
+                </h1>
+                <div class="row mt-4">
+                    <div class="col-6">
+                        {% if labels %}
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                اشیا
+                            </li>
+                            {% for label in labels %}
+                            <li class="list-group-item">
+                                {{ label }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endblock %}

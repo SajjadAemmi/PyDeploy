@@ -7,6 +7,7 @@ from sqlmodel import Session, select
 from database import get_user_by_username, create_user, engine, User
 from models import LoginModel, RegisterModel
 from face_analysis import FaceAnalysis
+from object_detection import YOLOv8
 
 
 app = Flask("Analyze Face")
@@ -14,7 +15,8 @@ app.secret_key = "my_secret_key"
 app.config["UPLOAD_FOLDER"] = './uploads'
 app.config["ALLOWED_EXTENSIONS"] = {'png', 'jpg', 'jpeg'}
 
-face_analysis = FaceAnalysis()
+face_analysis = FaceAnalysis("models/genderage.onnx")
+object_detector = YOLOv8("models/yolov8n.onnx")
 
 
 def allowed_file(filename):
@@ -129,11 +131,16 @@ def ai_object_detection():
         if request.method == "GET":
             return render_template("ai_object_detection.html")
         elif request.method == "POST":
-            my_image = request.files['image']
-            if my_image.filename == "":
+            input_image_file = request.files['image']
+            if input_image_file.filename == "":
                 return redirect(url_for('upload'))
             else:
-                return render_template("result.html")
+                if input_image_file and allowed_file(input_image_file.filename):
+                    input_image = Image.open(input_image_file.stream)
+                    input_image = np.array(input_image)
+                    output_image, labels = object_detector(input_image)
+                    return render_template("ai_face_analysis.html", labels=labels)
+    
     else:
         return redirect(url_for("index"))
 

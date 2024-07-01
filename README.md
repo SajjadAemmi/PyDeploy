@@ -3,10 +3,11 @@
 Python for Deployment
 
 [<img src="readme_files/python.svg" alt="python" height=40>](https://www.python.org)
+[<img src="readme_files/docker.svg" alt="docker" height=40>](https://www.docker.com)
 [<img src="readme_files/fastapi.png" alt="fastapi" height=40>](https://fastapi.tiangolo.com)
-[<img src="readme_files/streamlit.svg" alt="streamlit" height=40>](https://streamlit.io/)
-[<img src="readme_files/flet.svg" alt="flet" height=40>](https://flet.dev/)
-[<img src="readme_files/python_package.svg" alt="python_package" height=40>](https://pypi.org/)
+[<img src="readme_files/streamlit.svg" alt="streamlit" height=40>](https://streamlit.io)
+[<img src="readme_files/flet.svg" alt="flet" height=40>](https://flet.dev)
+[<img src="readme_files/python_package.svg" alt="python_package" height=40>](https://pypi.org)
 
 
 ## 📚 Table of Contents
