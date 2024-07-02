@@ -2,7 +2,6 @@ flask
 bcrypt
 sqlmodel
 pillow
-insightface
 onnxruntime
 pyyaml
 psycopg2

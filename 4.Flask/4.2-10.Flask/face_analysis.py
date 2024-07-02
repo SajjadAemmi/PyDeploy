@@ -1,20 +1,20 @@
 import cv2
-import insightface
+from retinaface import RetinaFace
+from age_gender import AgeGender
 
 
 class FaceAnalysis:
     def __init__(self, onnx_model_path):
         # Initialize the face analysis application
-        # self.face_detection_model = insightface.app.FaceAnalysis()
-        self.face_detection_model = insightface.model_zoo.get_model("models/det_10g.onnx")
+        self.face_detection_model = RetinaFace()
         self.face_detection_model.prepare(ctx_id=0, det_size=(640, 640))
 
         # Load the age and gender model
-        self.age_gender_model = insightface.model_zoo.get_model(onnx_model_path)
+        self.age_gender_model = AgeGender(onnx_model_path)
         self.age_gender_model.prepare(ctx_id=0)
 
     def detect_age_gender(self, image):
-        faces = self.face_detection_model.get(image)
+        faces = self.face_detection_model(image)
         genders = []
         ages = []
         for face in faces:
