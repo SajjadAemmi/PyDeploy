@@ -2,9 +2,11 @@ FROM python
 
 WORKDIR /myapp
 
-COPY . /myapp
+COPY requirements.txt /myapp
 
 RUN pip install -r requirements.txt
+
+# COPY . /myapp
 
 EXPOSE 5000
 

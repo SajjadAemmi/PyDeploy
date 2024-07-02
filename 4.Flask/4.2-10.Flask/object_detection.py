@@ -85,8 +85,9 @@ class YOLOv8:
         output_boxes = np.array(boxes)[indices]
         output_scores = np.array(scores)[indices]
         output_class_ids = np.array(class_ids)[indices]
-        output_labels = itemgetter(*output_class_ids)(self.classes)
-
+        output_labels = []
+        for output_class_id in output_class_ids:
+            output_labels.append(self.classes[output_class_id])
         output_image = input_image.copy()
         for i in indices:
             box = boxes[i]

@@ -10,17 +10,19 @@ from face_analysis import FaceAnalysis
 from object_detection import YOLOv8
 
 
-app = Flask("Analyze Face")
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+
+app = Flask("AI Web App")
 app.secret_key = "my_secret_key"
 app.config["UPLOAD_FOLDER"] = './uploads'
-app.config["ALLOWED_EXTENSIONS"] = {'png', 'jpg', 'jpeg'}
 
 face_analysis = FaceAnalysis("models/genderage.onnx")
 object_detector = YOLOv8("models/yolov8n.onnx")
 
 
 def allowed_file(filename):
-    return True
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @app.route("/")
@@ -45,7 +47,7 @@ def login():
         user = get_user_by_username(login_data.username)
         if user:
             password_byte = login_data.password.encode("utf-8")
-            if bcrypt.checkpw(password_byte, user.password):
+            if bcrypt.checkpw(password_byte, bytes(user.password, "utf-8")):
                 flash("خوش اومدی", "success")
                 flask_session["user_id"] = user.id
                 return redirect(url_for('profile'))
@@ -78,6 +80,7 @@ def register():
         if not result:
             password_byte = register_data.password.encode("utf-8")
             password_hash = bcrypt.hashpw(password_byte, bcrypt.gensalt())
+            password_hash = password_hash.decode('utf8')
             create_user(register_data.username, password_hash)
             flash("از اینکه در وب‌اپ هوش مصنوعی ثبت نام کردی ازت ممنونم", "success")
             return redirect(url_for("login"))
@@ -139,7 +142,7 @@ def ai_object_detection():
                     input_image = Image.open(input_image_file.stream)
                     input_image = np.array(input_image)
                     output_image, labels = object_detector(input_image)
-                    return render_template("ai_face_analysis.html", labels=labels)
+                    return render_template("ai_object_detection.html", labels=labels)
     
     else:
         return redirect(url_for("index"))
