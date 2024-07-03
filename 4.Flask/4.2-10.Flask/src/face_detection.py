@@ -1,8 +1,9 @@
 import os
+import argparse
 import numpy as np
 import cv2
 import onnxruntime
-from face import Face
+from src.face import Face
 
 
 def distance2bbox(points, distance, max_shape=None):
@@ -66,6 +67,7 @@ class RetinaFace:
         self.nms_thresh = 0.4
         self.det_thresh = 0.5
         self._init_vars()
+        self.prepare(ctx_id=0, det_size=(640, 640))
 
     def _init_vars(self):
         input_cfg = self.session.get_inputs()[0]
@@ -281,10 +283,17 @@ class RetinaFace:
 
 
 if __name__ == "__main__":
-    image_path = "uploads/photo_1403-03-12 18.52.54.jpeg"
-    input_image = cv2.imread(image_path)
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--image", type=str, required=True ,help="Input image path",
+    )
+    parser.add_argument(
+        "--model", type=str, default="models/det_10g.onnx", help="ONNX model path"
+    )
+    args = parser.parse_args()
 
+    input_image = cv2.imread(args.image)
     if input_image is not None:
-        face_detector = RetinaFace("models/det_10g.onnx")
+        face_detector = RetinaFace(args.model)
         faces = face_detector(input_image)
         print(faces)

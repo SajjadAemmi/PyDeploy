@@ -4,18 +4,13 @@ import onnxruntime
 from utils import face_align
 
 
-class AgeGender:
-    def __init__(self, model_file=None, session=None):
+class AgeGenderEstimator:
+    def __init__(self, model_file=None):
         assert model_file is not None
         self.model_file = model_file
-        self.session = session
-        input_mean = 0.0
-        input_std = 1.0
-
-        self.input_mean = input_mean
-        self.input_std = input_std
-        if self.session is None:
-            self.session = onnxruntime.InferenceSession(self.model_file, None)
+        self.input_mean = 0.0
+        self.input_std = 1.0
+        self.session = onnxruntime.InferenceSession(self.model_file, providers=["CPUExecutionProvider"])
         input_cfg = self.session.get_inputs()[0]
         input_shape = input_cfg.shape
         input_name = input_cfg.name
@@ -29,11 +24,7 @@ class AgeGender:
         self.output_names = output_names
         assert len(self.output_names) == 1
 
-    def prepare(self, ctx_id, **kwargs):
-        if ctx_id < 0:
-            self.session.set_providers(["CPUExecutionProvider"])
-
-    def get(self, img, face):
+    def __call__(self, img, face):
         bbox = face.bbox
         w, h = (bbox[2] - bbox[0]), (bbox[3] - bbox[1])
         center = (bbox[2] + bbox[0]) / 2, (bbox[3] + bbox[1]) / 2

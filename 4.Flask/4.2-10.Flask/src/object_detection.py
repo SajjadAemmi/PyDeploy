@@ -1,5 +1,4 @@
 import argparse
-from operator import itemgetter
 import yaml
 import cv2
 import numpy as np
@@ -100,6 +99,7 @@ class YOLOv8:
         image_data = self.preprocess(input_image)
         outputs = self.session.run(None, {self.model_inputs[0].name: image_data})
         output_image, output_labels = self.postprocess(input_image, outputs)
+        output_image = cv2.cvtColor(output_image, cv2.COLOR_BGR2RGB)
         return output_image, output_labels
 
 

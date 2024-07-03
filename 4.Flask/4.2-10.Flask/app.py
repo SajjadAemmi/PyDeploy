@@ -1,13 +1,16 @@
 import os
 import bcrypt
+import cv2
 import numpy as np
+import base64
 from PIL import Image
 from flask import Flask, jsonify, send_file, flash, render_template, request, redirect, url_for, session as flask_session
 from sqlmodel import Session, select
 from database import get_user_by_username, create_user, engine, User
 from models import LoginModel, RegisterModel
-from face_analysis import FaceAnalysis
-from object_detection import YOLOv8
+from src.face_analysis import FaceAnalysis
+from src.object_detection import YOLOv8
+from utils.image import encode_image
 
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
@@ -16,7 +19,7 @@ app = Flask("AI Web App")
 app.secret_key = "my_secret_key"
 app.config["UPLOAD_FOLDER"] = './uploads'
 
-face_analysis = FaceAnalysis("models/genderage.onnx")
+face_analysis = FaceAnalysis("models/det_10g.onnx", "models/genderage.onnx")
 object_detector = YOLOv8("models/yolov8n.onnx")
 
 
@@ -123,7 +126,8 @@ def ai_face_analysis():
                     input_image = Image.open(input_image_file.stream)
                     input_image = np.array(input_image)
                     output_image, genders, ages = face_analysis.detect_age_gender(input_image)
-                    return render_template("ai_face_analysis.html", genders=genders, ages=ages)
+                    image_uri = encode_image(output_image)
+                    return render_template("ai_face_analysis.html", genders=genders, ages=ages, image_uri=image_uri)
     else:
         return redirect(url_for("index"))
 
@@ -142,8 +146,8 @@ def ai_object_detection():
                     input_image = Image.open(input_image_file.stream)
                     input_image = np.array(input_image)
                     output_image, labels = object_detector(input_image)
-                    return render_template("ai_object_detection.html", labels=labels)
-    
+                    image_uri = encode_image(output_image)
+                    return render_template("ai_object_detection.html", labels=labels, image_uri=image_uri)
     else:
         return redirect(url_for("index"))
 

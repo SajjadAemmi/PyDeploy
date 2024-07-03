@@ -5,7 +5,7 @@ class User(SQLModel, table=True):
     username: str = Field(index=True)
     password: str
 
-DATABASE_URL = "postgresql://akbar_agha:ramze_akbar_agha@localhost:5432/database_akbar_agha"
+DATABASE_URL = "postgresql://akbar_agha:ramze_akbar_agha@some-postgres:5432/database_akbar_agha"
 # DATABASE_URL = 'sqlite:///./database.db'
 engine = create_engine(DATABASE_URL, echo=True)
 

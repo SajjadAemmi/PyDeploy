@@ -31,6 +31,14 @@
                 <h1 class="card-title">
                     <i class="fa-duotone fa-face-viewfinder"></i>
                 </h1>
+                {% if image_uri %}
+                <div class="row mt-4">
+                    <div class="col">
+                        <img src="{{ image_uri }}" class="img-fluid">
+                    </div>
+                </div>
+                {% endif %}
+
                 <div class="row mt-4">
                     <div class="col-6">
                         {% if genders %}

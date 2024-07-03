@@ -23,4 +23,18 @@ docker build -t ai_web_app .
 docker run --rm -p 5432:5432 -p 8080:5000 -v $(pwd):/myapp ai_web_app
 ```
 
+## 2 Dockers
+
+```bash
+docker network create my_network
+```
+
+```bash
+docker run --network my_network --name some-postgres -e POSTGRES_PASSWORD=ramze_akbar_agha -e POSTGRES_USER=akbar_agha -e POSTGRES_DB=database_akbar_agha -d postgres
+```
+
+```bash
+docker run --rm --network my_network --name ai_web_app -p 8080:5000 -v $(pwd):/myapp ai_web_app
+```
+
 ## Docker compose

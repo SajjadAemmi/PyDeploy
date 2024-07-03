@@ -14,7 +14,7 @@
                 </h1>
                 <h5 class="card-title">تشخیص اشیا</h5>
                 <p class="card-text">
-                    یک عکس از اتاقت بده، تا بهت بگم چه وسیله‌هایی توی اتاقت داری 
+                    یک عکس از اتاقت بده، تا بهت بگم چه وسیله‌هایی توی اتاقت داری
                 </p>
                 <form method="post" enctype="multipart/form-data">
                     <div class="mb-3">
@@ -32,9 +32,17 @@
                 <h1 class="card-title">
                     <i class="fa-duotone fa-face-viewfinder"></i>
                 </h1>
+                {% if image_uri %}
+                <div class="row mt-4">
+                    <div class="col">
+                        <img src="{{ image_uri }}" class="img-fluid">
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if labels %}
                 <div class="row mt-4">
                     <div class="col-6">
-                        {% if labels %}
                         <ul class="list-group">
                             <li class="list-group-item">
                                 اشیا
@@ -45,9 +53,9 @@
                             </li>
                             {% endfor %}
                         </ul>
-                        {% endif %}
                     </div>
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>
