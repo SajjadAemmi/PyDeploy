@@ -6,7 +6,7 @@ import base64
 from PIL import Image
 from flask import Flask, jsonify, send_file, flash, render_template, request, redirect, url_for, session as flask_session
 from sqlmodel import Session, select
-from database import get_user_by_username, create_user, engine, User
+from database import get_user_by_username, create_user, engine, User, Comment
 from models import LoginModel, RegisterModel
 from src.face_analysis import FaceAnalysis
 from src.object_detection import YOLOv8
@@ -173,3 +173,11 @@ def mind_reader_process():
 def mind_reader_result():
     number = request.args.get('number')
     return render_template('mind_reader_result.html', number=number)
+
+
+@app.route('/create-new-comment')
+def create_new_comment():
+    with Session(engine) as db_session:
+        new_comment = Comment(user_id=1, content="This is a user comment.")
+        db_session.add(new_comment)
+        db_session.commit()

@@ -38,3 +38,25 @@ docker run --rm --network my_network --name ai_web_app -p 8080:5000 -v $(pwd):/m
 ```
 
 ## Docker compose
+
+```bash
+docker compose up -d
+```
+
+```bash
+docker compose ps
+```
+
+Stop your services once you've finished with them:
+
+```bash
+docker compose stop
+```
+
+You can bring everything down, removing the containers entirely, with the following command:
+
+```bash
+docker compose down
+```
+
+https://devhints.io/docker-compose

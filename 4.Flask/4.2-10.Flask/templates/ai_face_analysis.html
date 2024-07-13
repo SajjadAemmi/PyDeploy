@@ -74,4 +74,36 @@
     </div>
 </div>
 
+<div class="row mt-4">
+    <div class="col">
+        <div id="editor">
+            <p>Hello from CKEditor 5!</p>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import {
+        ClassicEditor,
+        Essentials,
+        Bold,
+        Italic,
+        Font,
+        Paragraph
+    } from 'ckeditor5';
+
+    ClassicEditor
+        .create( document.querySelector( '#editor' ), {
+            plugins: [ Essentials, Bold, Italic, Font, Paragraph ],
+            toolbar: {
+                items: [
+                    'undo', 'redo', '|', 'bold', 'italic', '|',
+                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
+                ]
+            }
+        } )
+        .then( /* ... */ )
+        .catch( /* ... */ );
+</script>
+
 {% endblock %}
