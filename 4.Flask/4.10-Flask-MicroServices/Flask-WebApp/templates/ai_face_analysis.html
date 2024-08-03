@@ -1,0 +1,109 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+آنالیز چهره
+{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-6">
+        <div class="card text-bg-success mb-3">
+            <div class="card-body">
+                <h1 class="card-title">
+                    آنالیز چهره
+                </h1>
+                <p class="card-text">
+                    یک عکس از صورت خوشگلت بده، تا بهت بگم چند سالته، پسری یا دختری و ...
+                </p>
+                <form method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">بارگزاری فایل</label>
+                        <input name="image" class="form-control" type="file" id="formFile">
+                    </div>
+                    <button type="submit" class="btn btn-light">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="card text-bg-light mb-3">
+            <div class="card-body">
+                <h1 class="card-title">
+                    <i class="fa-duotone fa-face-viewfinder"></i>
+                </h1>
+                {% if image_uri %}
+                <div class="row mt-4">
+                    <div class="col">
+                        <img src="{{ image_uri }}" class="img-fluid">
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="row mt-4">
+                    <div class="col-6">
+                        {% if genders %}
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                جنسیت
+                            </li>
+                            {% for gender in genders %}
+                            <li class="list-group-item">
+                                {{ gender }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                    <div class="col-6">
+                        {% if ages %}
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                سن
+                            </li>
+                            {% for age in ages %}
+                            <li class="list-group-item">
+                                {{ age }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col">
+        <div id="editor">
+            <p>Hello from CKEditor 5!</p>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import {
+        ClassicEditor,
+        Essentials,
+        Bold,
+        Italic,
+        Font,
+        Paragraph
+    } from 'ckeditor5';
+
+    ClassicEditor
+        .create( document.querySelector( '#editor' ), {
+            plugins: [ Essentials, Bold, Italic, Font, Paragraph ],
+            toolbar: {
+                items: [
+                    'undo', 'redo', '|', 'bold', 'italic', '|',
+                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
+                ]
+            }
+        } )
+        .then( /* ... */ )
+        .catch( /* ... */ );
+</script>
+
+{% endblock %}

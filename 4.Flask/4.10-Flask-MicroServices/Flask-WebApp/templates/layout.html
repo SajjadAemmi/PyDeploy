@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>
+		{% block title %}
+		{% endblock %}
+	</title>
+
+	<link rel="stylesheet" type="text/css" href="static/css/bootstrap.rtl.css">
+	<link rel="stylesheet" href="static/css/all.css">
+	<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+
+	<link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/42.0.1/ckeditor5.css" />
+	<script type="importmap">
+		{
+			"imports": {
+				"ckeditor5": "https://cdn.ckeditor.com/ckeditor5/42.0.1/ckeditor5.js",
+				"ckeditor5/": "https://cdn.ckeditor.com/ckeditor5/42.0.1/"
+			}
+		}
+	</script>
+	
+	<link rel="stylesheet" href="static/css/style.css">
+
+</head>
+
+<body>
+	{% include "navbar.html" %}
+	<div class="container">
+		{% with messages = get_flashed_messages(with_categories=True) %}
+			{% if messages %}
+				{% for category, message in messages %}
+					<div class="alert alert-{{ category }} mt-4" role="alert">
+						{{ message }}
+					</div>
+				{% endfor %}
+			{% endif %}
+		{% endwith %}
+
+		{% block content %}
+		{% endblock %}
+	</div>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+		integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+		crossorigin="anonymous"></script>
+	<script src="static/js/bootstrap.js"></script>
+
+	
+</body>
+
+</html>

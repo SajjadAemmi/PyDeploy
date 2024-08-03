@@ -1,0 +1,36 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+ثبت نام
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+	<div class="col-4">
+		<div class="card text-bg-info mb-3">
+			<div class="card-header">ثبت نام</div>
+			<div class="card-body">
+				<form method="post">
+					<div class="mb-3">
+						<label class="form-label">شهر</label>
+						<input name="city" type="text" class="form-control">
+					</div>
+					<div class="mb-3">
+						<label class="form-label">نام کاربری</label>
+						<input name="username" type="text" class="form-control">
+					</div>
+					<div class="mb-3">
+						<label for="exampleInputPassword1" class="form-label">گذرواژه</label>
+						<input name="password" type="password" class="form-control" id="exampleInputPassword1">
+					</div>
+					<div class="mb-3">
+						<label for="exampleInputPassword1" class="form-label">تکرار گذرواژه</label>
+						<input name="password" type="password" class="form-control" id="exampleInputPassword1">
+					</div>
+					<button type="submit" class="btn btn-primary">ثبت نام</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

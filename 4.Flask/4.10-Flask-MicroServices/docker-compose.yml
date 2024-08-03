@@ -1,0 +1,30 @@
+services:
+  postgres:
+    image: postgres
+    container_name: some-postgres
+    environment:
+      POSTGRES_PASSWORD: ramze_akbar_agha
+      POSTGRES_USER: akbar_agha
+      POSTGRES_DB: database_akbar_agha
+    networks:
+      - my_network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  ai_web_app:
+    image: ai_web_app
+    container_name: ai_web_app
+    ports:
+      - "8080:5000"
+    volumes:
+      - .:/myapp
+    networks:
+      - my_network
+    depends_on:
+      - postgres
+
+networks:
+  my_network:
+
+volumes:
+  postgres_data:

@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+  خانه
+{% endblock %}
+
+{% block content %}
+    <div class="card text-bg-dark mt-4">
+      <img src="static/images/cover.png" class="card-img" alt="...">
+      <div class="card-img-overlay">
+        <h2 class="card-title">قدرت هوش مصنوعی در دستان تو</h2>
+        <p class="card-text">برای یک ماجراجویی هیجان انگیز در دنیای هوش مصنوعی آماده‌ای؟</p>
+        <a class="btn btn-light btn-lg" href="/login" role="button">شروع کن</a>
+      </div>
+    </div>
+
+    {% include "services.html" %}
+{% endblock %}

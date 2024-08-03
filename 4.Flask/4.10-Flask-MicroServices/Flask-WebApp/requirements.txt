@@ -1,0 +1,10 @@
+flask
+bcrypt
+sqlmodel
+pillow
+numpy
+opencv-python
+onnxruntime
+pyyaml
+psycopg2
+scikit-image

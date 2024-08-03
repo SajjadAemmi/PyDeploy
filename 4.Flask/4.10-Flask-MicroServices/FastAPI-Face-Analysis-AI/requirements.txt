@@ -1,0 +1,7 @@
+fastapi[standard]
+starlette
+uvicorn
+pydantic
+onnxruntime
+numpy
+opencv-python-headless

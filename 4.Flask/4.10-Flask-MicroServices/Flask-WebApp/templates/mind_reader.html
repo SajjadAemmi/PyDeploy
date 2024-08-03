@@ -1,0 +1,27 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+ذهن خوان
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-6">
+        <div class="card text-bg-light mb-3">
+            <div class="card-body">
+                <form action="{{ url_for('mind_reader_process') }}" method="POST">
+                    <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">
+                            به چه عددی فکر می‌کنی؟
+                        </label>
+                        <input type="number" name="number" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
