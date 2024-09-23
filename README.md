@@ -8,6 +8,7 @@ Python for Deployment
 [<img src="readme_files/streamlit.svg" alt="streamlit" height=40>](https://streamlit.io)
 [<img src="readme_files/flet.svg" alt="flet" height=40>](https://flet.dev)
 [<img src="readme_files/python_package.svg" alt="python_package" height=40>](https://pypi.org)
+[<img src="readme_files/redis.svg" alt="python_package" height=40>](https://redis.io)
 
 
 ## 📚 Table of Contents
