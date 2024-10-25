@@ -15,8 +15,8 @@ class Comment(SQLModel, table=True):
     timestamp: datetime = Field(default_factory=datetime.now)
 
 
-DATABASE_URL = "postgresql://akbar_agha:ramze_akbar_agha@some-postgres:5432/database_akbar_agha"
-# DATABASE_URL = 'sqlite:///./database.db'
+# DATABASE_URL = "postgresql://akbar_agha:ramze_akbar_agha@some-postgres:5432/database_akbar_agha"
+DATABASE_URL = 'sqlite:///./database.db'
 engine = create_engine(DATABASE_URL, echo=True)
 
 # Create the database tables

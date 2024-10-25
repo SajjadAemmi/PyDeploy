@@ -76,9 +76,10 @@
 
 <div class="row mt-4">
     <div class="col">
-        <div id="editor">
-            <p>Hello from CKEditor 5!</p>
-        </div>
+        <form action="/create-new-comment" method="post">
+            <textarea name="content" id="editor"></textarea>
+            <button type="submit">Submit</button>
+        </form>
     </div>
 </div>
 

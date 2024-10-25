@@ -50,7 +50,7 @@ def login():
         user = get_user_by_username(login_data.username)
         if user:
             password_byte = login_data.password.encode("utf-8")
-            if bcrypt.checkpw(password_byte, bytes(user.password, "utf-8")):
+            if bcrypt.checkpw(password_byte, user.password):
                 flash("خوش اومدی", "success")
                 flask_session["user_id"] = user.id
                 return redirect(url_for('profile'))
@@ -175,9 +175,10 @@ def mind_reader_result():
     return render_template('mind_reader_result.html', number=number)
 
 
-@app.route('/create-new-comment')
+@app.route('/create-new-comment', methods=['POST'])
 def create_new_comment():
+    text = request.form["text"]
     with Session(engine) as db_session:
-        new_comment = Comment(user_id=1, content="This is a user comment.")
+        new_comment = Comment(user_id=1, content=text)
         db_session.add(new_comment)
         db_session.commit()
