@@ -4,7 +4,7 @@ services:
   fastapi_app:
     build: ./backend
     container_name: fastapi_app
-    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
     ports:
       - "8000:8000"
     depends_on:
@@ -16,7 +16,7 @@ services:
   celery_worker:
     build: ./backend
     container_name: celery_worker
-    command: ["celery", "-A", "app.celery_worker.celery_app", "worker", "--loglevel=info"]
+    command: ["celery", "-A", "celery_worker.celery_app", "worker", "--loglevel=info"]
     depends_on:
       - redis
     environment:

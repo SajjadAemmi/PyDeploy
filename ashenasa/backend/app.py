@@ -1,6 +1,7 @@
 from fastapi import FastAPI, UploadFile, BackgroundTasks
 from celery.result import AsyncResult
-from .tasks import face_verification, speech_to_text, gesture_recognition
+from tasks import face_verification, speech_to_text, gesture_recognition
+from celery_worker import celery_app
 
 
 app = FastAPI()
@@ -26,7 +27,7 @@ async def authenticate_gesture(file: UploadFile):
 
 @app.get("/task_status/{task_id}")
 def get_task_status(task_id: str):
-    result = AsyncResult(task_id)
+    result = celery_app.AsyncResult(task_id)
     if result.state == "PENDING":
         return {"status": "pending"}
     elif result.state == "SUCCESS":

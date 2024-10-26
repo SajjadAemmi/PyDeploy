@@ -1,18 +1,24 @@
-from .celery_worker import celery_app
 import time
 import random
+from celery_worker import celery_app
+
 
 @celery_app.task
 def face_verification(face_data: bytes):
     # Simulate processing time and perform face verification
     time.sleep(3)
-    return {"status": "completed", "result": "face_match" if random.random() > 0.5 else "no_match"}
+    return {
+        "status": "completed",
+        "result": "face_match" if random.random() > 0.5 else "no_match",
+    }
+
 
 @celery_app.task
 def speech_to_text(audio_data: bytes):
     # Simulate processing time and perform speech-to-text conversion
     time.sleep(5)
     return {"status": "completed", "result": "transcribed_text_here"}
+
 
 @celery_app.task
 def gesture_recognition(gesture_data: bytes):

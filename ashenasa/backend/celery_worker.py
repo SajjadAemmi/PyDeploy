@@ -4,8 +4,8 @@ from celery import Celery
 
 celery_app = Celery(
     "biometric_auth",
-    broker="redis://localhost:6379/0",
-    backend="redis://localhost:6379/0"
+    broker="redis://localhost:6379",
+    backend="redis://localhost:6379"
 )
 
 celery_app.conf.task_routes = {
