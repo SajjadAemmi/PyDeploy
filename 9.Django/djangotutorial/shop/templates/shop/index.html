@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    Shop index
+
+    {% if user.is_authenticated %}
+    <p>Welcome, {{ user.email }}</p>
+    {% if user.is_superuser %}
+    <a href="/admin/">Django Admin</a> |
+    {% endif %}
+    <a href="{% url 'profile' %}">Profile</a> |
+    <a href="{% url 'signout' %}">Sign Out</a>
+    {% else %}
+    <a href="{% url 'signin' %}">Sign In</a> |
+    <a href="{% url 'signup' %}">Sign Up</a>
+    {% endif %}
+
+</body>
+
+</html>
