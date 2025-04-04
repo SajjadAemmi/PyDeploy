@@ -28,11 +28,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-<<<<<<<< HEAD:9.Django/djangotutorial/mysite/settings.py
+
 SECRET_KEY = 'django-insecure-ex@7n73u855mms!d=-h%a=y!sx%(z*fkl2+45-vs4zq1xwtai&'
-========
-SECRET_KEY = 'django-insecure-((*wn9*3n1a30(hk4f+#!wo8upx5$!uj1z)=^u+4dhul116ghb'
->>>>>>>> 3528735 (add images to product):9.Django/sajjadkala/mysite/settings.py
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -49,12 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-<<<<<<<< HEAD:9.Django/djangotutorial/mysite/settings.py
-    'shop'
-========
     'shop',
     'blog'
->>>>>>>> 3528735 (add images to product):9.Django/sajjadkala/mysite/settings.py
 ]
 
 AUTH_USER_MODEL = 'shop.Customer'
@@ -92,13 +85,6 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-<<<<<<<< HEAD:9.Django/djangotutorial/mysite/settings.py
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-========
 
 # DATABASES = {
 #     'default': {
@@ -115,7 +101,6 @@ DATABASES = {
         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
         'HOST': os.getenv('POSTGRES_HOST'),
         'PORT': os.getenv('POSTGRES_PORT'),
->>>>>>>> 3528735 (add images to product):9.Django/sajjadkala/mysite/settings.py
     }
 }
 
