@@ -1,0 +1,21 @@
+{% extends 'master.html' %}
+
+{% block title %}
+لیست همه کالاها
+{% endblock %}
+
+{% block content %}
+
+<ul>
+    {% for product in products %}
+        <li>
+            <a href="{% url 'product' product.id %}">
+                {{ product.name }} - 
+                {{ product.price }} تومان - 
+                {{ product.get_category_display }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

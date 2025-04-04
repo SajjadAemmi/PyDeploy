@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres
+    container_name: some-postgres-sajjadkala
+    restart: always
+    environment:
+      POSTGRES_DB: database_sajjadkala
+      POSTGRES_USER: akbar_agha
+      POSTGRES_PASSWORD: ramze_akbar_agha
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  
+  web:
+    build: .
+    container_name: django_app
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    command: ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
+
+volumes:
+  postgres_data:

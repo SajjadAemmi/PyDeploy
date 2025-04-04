@@ -1,0 +1,27 @@
+{% extends 'master.html' %}
+{% load static %}
+{% block title %}
+
+    قیمت و خرید 
+    {{ product.name }}
+
+{% endblock %}
+
+{% block content %}
+
+    <h1>{{ product.name }}</h1>
+    <p>{{ product.price }} تومان</p>
+    <p>{{ product.get_category_display }}</p>
+    <p>{{ product.brand }}</p>
+    <p>{{ product.description }}</p>
+
+    {% for image in product.images.all %}
+        <img width="200px" src="{{ image.image.url }}">
+    {% endfor %}
+
+    <form action="{% url 'add_to_cart' product.id %}" method="post">
+        {% csrf_token %}
+        <input type="submit" value="افزودن به سبد خرید">
+    </form>
+
+{% endblock %}
