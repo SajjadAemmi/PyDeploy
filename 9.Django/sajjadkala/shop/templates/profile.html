@@ -1,0 +1,21 @@
+{% extends 'master.html' %}
+
+{% block title %}
+
+پروفایل کاربری
+
+{% endblock %}
+
+{% block content %}
+
+<h2>پروفایل کاربری</h2>
+<h3>{{ user.username }} خوش آمدید</h3>
+<p>{{ user.email }}</p>
+<p>{{ user.phone }}</p>
+<p>{{ user.address }}</p>
+
+<a href="{% url 'signout' %}">
+    خروج از حساب کاربری
+</a>
+
+{% endblock %}
