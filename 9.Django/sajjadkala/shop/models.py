@@ -29,6 +29,13 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+class ProductImage(models.Model):
+    image = models.ImageField(upload_to='product_images/')
+    product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Image for {self.product.name}"
+
 class Rate:
     pass
 

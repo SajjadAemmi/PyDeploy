@@ -1,31 +1,25 @@
-version: '3.8'
+version: "3.8"
 
 services:
   db:
     image: postgres
-    container_name: some-postgres
+    container_name: some-postgres-sajjadkala
     restart: always
     environment:
-      POSTGRES_DB: some-db
-      POSTGRES_USER: some-user
-      POSTGRES_PASSWORD: some-password
+      POSTGRES_DB: database_sajjadkala
+      POSTGRES_USER: akbar_agha
+      POSTGRES_PASSWORD: ramze_akbar_agha
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-
+  
   web:
     build: .
     container_name: django_app
     restart: always
     depends_on:
       - db
-#    environment:
-#      DATABASE_NAME: database_sajjadkala
-#      DATABASE_USER: akbar_agha
-#      DATABASE_PASSWORD: ramze_akbar_agha
-#      DATABASE_HOST: db
-#      DATABASE_PORT: 5432
     ports:
       - "8000:8000"
     volumes:

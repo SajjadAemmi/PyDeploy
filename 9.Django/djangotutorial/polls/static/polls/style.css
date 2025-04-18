@@ -1,0 +1,8 @@
+li a, li a:visited {
+    color: green;
+}
+
+
+body {
+    background: white url("images/winter.jpeg") no-repeat;
+}

@@ -1,5 +1,5 @@
 {% extends 'master.html' %}
-
+{% load static %}
 {% block title %}
 
     قیمت و خرید 
@@ -14,6 +14,10 @@
     <p>{{ product.get_category_display }}</p>
     <p>{{ product.brand }}</p>
     <p>{{ product.description }}</p>
+
+    {% for image in product.images.all %}
+        <img width="200px" src="{{ image.image.url }}">
+    {% endfor %}
 
     <form action="{% url 'add_to_cart' product.id %}" method="post">
         {% csrf_token %}
