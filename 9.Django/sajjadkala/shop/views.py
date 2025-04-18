@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
+from django.http import JsonResponse
 from .forms import SignUpForm, SignInForm
 from .models import Product, CartItem
 
@@ -96,3 +97,10 @@ def remove_from_cart(request, item_id):
     item = get_object_or_404(CartItem, id=item_id)
     item.delete()
     return redirect('cart')
+
+
+def api_all_products(request):
+    products = Product.objects.all().values(
+        'id', 'name', 'price', 'brand', 'category', 'description'
+    )
+    return JsonResponse(list(products), safe=False, json_dumps_params={'ensure_ascii': False})
