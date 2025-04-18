@@ -1,27 +1,49 @@
 {% extends 'master.html' %}
+
 {% load static %}
+{% load humanize %}
+
 {% block title %}
-
-    قیمت و خرید 
-    {{ product.name }}
-
+    قیمت و خرید {{ product.name }}
 {% endblock %}
 
 {% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <!-- Product Images -->
+        <div class="col-md-6">
+            <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% for image in product.images.all %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <img src="{{ image.image.url }}" class="d-block w-100 img-fluid rounded" alt="{{ product.name }}">
+                        </div>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+            </div>
+        </div>
 
-    <h1>{{ product.name }}</h1>
-    <p>{{ product.price }} تومان</p>
-    <p>{{ product.get_category_display }}</p>
-    <p>{{ product.brand }}</p>
-    <p>{{ product.description }}</p>
+        <!-- Product Info -->
+        <div class="col-md-6">
+            <h1 class="mb-3">{{ product.name }}</h1>
+            <h4 class="text-success mb-3">{{ product.price|intcomma }} تومان</h4>
+            <p><strong>دسته‌بندی:</strong> {{ product.get_category_display }}</p>
+            <p><strong>برند:</strong> {{ product.brand }}</p>
+            <p class="mt-4">{{ product.description }}</p>
 
-    {% for image in product.images.all %}
-        <img width="200px" src="{{ image.image.url }}">
-    {% endfor %}
-
-    <form action="{% url 'add_to_cart' product.id %}" method="post">
-        {% csrf_token %}
-        <input type="submit" value="افزودن به سبد خرید">
-    </form>
-
+            <form action="{% url 'add_to_cart' product.id %}" method="post" class="mt-4">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary btn-lg">
+                    افزودن به سبد خرید
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

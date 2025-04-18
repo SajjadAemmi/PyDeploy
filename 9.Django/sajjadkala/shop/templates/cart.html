@@ -1,0 +1,47 @@
+{% extends 'master.html' %}
+{% load humanize %}
+
+{% block title %}
+سبد خرید
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">سبد خرید شما</h2>
+
+    {% if cart_items %}
+        <table class="table table-bordered table-striped text-center">
+            <thead class="table-light">
+                <tr>
+                    <th>محصول</th>
+                    <th>تعداد</th>
+                    <th>قیمت واحد</th>
+                    <th>قیمت کل</th>
+                    <th>حذف</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.product.price|intcomma }} تومان</td>
+                    <td>{{ item.total_price|intcomma }} تومان</td>
+                    <td>
+                        <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-danger btn-sm">حذف</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="text-end mt-4">
+            <h5>جمع کل: <strong class="text-success">{{ total|intcomma }} تومان</strong></h5>
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center">
+            سبد خرید شما خالی است.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
